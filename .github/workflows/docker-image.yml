@@ -1,0 +1,25 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Extract Maven project version
+      run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+      id: projetct
+      
+    - name: Show extracted Maven project version
+      run: echo ${{ steps.project.outputs.version }}
+    
+    - name: Build the Docker image
+      # run: docker build . --file Dockerfile --tag nocrobson/poc:$(date +%s)
